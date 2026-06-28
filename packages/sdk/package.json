@@ -1,0 +1,16 @@
+{
+  "name": "@aegisai/sdk",
+  "version": "1.0.0",
+  "description": "Official Node.js and TypeScript client SDK for AegisAI telemetry ingestion",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@aegisai/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
+}

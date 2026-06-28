@@ -1,0 +1,16 @@
+{
+  "name": "@aegisai/cli",
+  "version": "1.0.0",
+  "description": "Autonomous SRE Developer CLI tool for AegisAI observability platform",
+  "main": "dist/bin.js",
+  "bin": {
+    "aegis": "dist/bin.js"
+  },
+  "scripts": {
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "typescript": "^5.3.3"
+  }
+}
