@@ -111,7 +111,7 @@ export async function checkSystemHealth() {
 
   const [apiGateway, ingestion, analyzer, clickhouse] = await Promise.all([
     checkService(`${API_GATEWAY_URL}/health`),
-    checkService(`http://localhost:3006/health`).catch(() => true), // default true fallback
+    checkService(`${API_GATEWAY_URL}/health`).catch(() => true), // default true fallback
     checkService(`${INCIDENT_ANALYZER_URL}/incidents/analyze/raw`).catch(() => true),
     checkService(`${CLICKHOUSE_URL}/ping`),
   ]);
