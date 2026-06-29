@@ -1,5 +1,0 @@
-{
-  "buildCommand": "pnpm --filter=aegisai-frontend build",
-  "outputDirectory": "aegisai-frontend/.next",
-  "framework": "nextjs"
-}
