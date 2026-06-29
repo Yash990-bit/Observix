@@ -4,7 +4,7 @@
   "private": true,
   "description": "AegisAI production-grade distributed observability platform",
   "scripts": {
-    "build": "pnpm --filter=@aegisai/* build",
+    "build": "pnpm -r build",
     "dev:api": "pnpm --filter=api-gateway dev",
     "start:api": "pnpm --filter=api-gateway start:prod",
     "dev:analyzer": "pnpm --filter=incident-analyzer dev",
