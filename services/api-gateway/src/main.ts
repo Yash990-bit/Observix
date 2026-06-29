@@ -24,7 +24,7 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   const port = configService.get<number>('PORT') || 3000;
 
-  await app.listen(port);
-  logger.log(`API Gateway service started on port ${port}`, 'Bootstrap');
+  await app.listen(port, '0.0.0.0');
+  logger.log(`API Gateway service started on port ${port} (0.0.0.0)`, 'Bootstrap');
 }
 bootstrap();

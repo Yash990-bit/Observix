@@ -22,7 +22,8 @@ export function IncidentDetail({ incident }: IncidentDetailProps) {
 
   const handleFeedback = async (helpful: boolean) => {
     try {
-      await fetch(`http://localhost:3008/incidents/${incident.incident_id}/feedback`, {
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://observix.onrender.com';
+      await fetch(`${baseUrl}/incidents/${incident.incident_id}/feedback`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ helpful, accuracy_score: helpful ? 100 : 0 }),

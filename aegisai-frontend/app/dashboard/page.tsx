@@ -26,7 +26,8 @@ export default function DashboardPage() {
   useEffect(() => {
     const fetchIncidents = async () => {
       try {
-        const res = await fetch('http://localhost:3000/incidents');
+        const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://observix.onrender.com';
+        const res = await fetch(`${baseUrl}/incidents`);
         if (res.ok) {
           const data = await res.json();
           setIncidents(data);

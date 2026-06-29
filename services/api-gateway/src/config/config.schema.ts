@@ -19,7 +19,7 @@ class EnvironmentVariables {
   @IsString()
   DATABASE_URL!: string;
 
-  @IsUrl({ protocols: ['redis'], require_tld: false }, { message: 'REDIS_URL must be a valid redis connection URL (e.g. redis://localhost:6379)' })
+  @IsUrl({ protocols: ['redis', 'rediss'], require_tld: false }, { message: 'REDIS_URL must be a valid redis connection URL (e.g. redis://localhost:6379)' })
   REDIS_URL!: string;
 
   @IsString()
@@ -34,7 +34,7 @@ class EnvironmentVariables {
   @IsString()
   CLICKHOUSE_DATABASE!: string;
 
-  @IsUrl({ protocols: ['nats'], require_tld: false }, { message: 'NATS_URL must be a valid nats connection URL (e.g. nats://localhost:4222)' })
+  @IsUrl({ protocols: ['nats', 'tls'], require_tld: false }, { message: 'NATS_URL must be a valid nats connection URL (e.g. nats://localhost:4222)' })
   NATS_URL!: string;
 }
 

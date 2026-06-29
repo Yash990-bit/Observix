@@ -25,7 +25,7 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   const port = configService.get<number>('ANALYZER_PORT') || 3008;
 
-  await app.listen(port);
-  logger.log(`Incident Analyzer service started on port ${port}`, 'Bootstrap');
+  await app.listen(port, '0.0.0.0');
+  logger.log(`Incident Analyzer service started on port ${port} (0.0.0.0)`, 'Bootstrap');
 }
 bootstrap();

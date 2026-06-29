@@ -22,7 +22,7 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   const port = configService.get<number>('PORT') || 3006;
 
-  await app.listen(port);
-  logger.log(`Ingestion service started on port ${port}`, 'Bootstrap');
+  await app.listen(port, '0.0.0.0');
+  logger.log(`Ingestion service started on port ${port} (0.0.0.0)`, 'Bootstrap');
 }
 bootstrap();

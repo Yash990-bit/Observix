@@ -6,7 +6,7 @@
   "scripts": {
     "build": "pnpm --filter=@aegisai/* build",
     "dev:api": "pnpm --filter=api-gateway dev",
-    "start:api": "pnpm --filter=api-gateway start",
+    "start:api": "pnpm --filter=api-gateway start:prod",
     "dev:analyzer": "pnpm --filter=incident-analyzer dev",
     "start:analyzer": "pnpm --filter=incident-analyzer start",
     "dev:frontend": "pnpm --filter=aegisai-frontend dev",

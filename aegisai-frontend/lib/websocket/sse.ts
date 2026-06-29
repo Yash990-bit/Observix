@@ -1,7 +1,8 @@
 import { LogItem } from '../api/client';
 
-const SSE_LOGS_URL = 'http://localhost:3005/stream/logs';
-const SSE_METRICS_URL = 'http://localhost:3005/stream/metrics';
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://observix.onrender.com';
+const SSE_LOGS_URL = `${BASE_URL}/stream/logs`;
+const SSE_METRICS_URL = `${BASE_URL}/stream/metrics`;
 
 export function subscribeToLogs(onLog: (log: LogItem) => void): () => void {
   let eventSource: EventSource | null = null;

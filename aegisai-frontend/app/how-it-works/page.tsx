@@ -11,7 +11,8 @@ export default function HowItWorksPage() {
   useEffect(() => {
     const fetchLogs = async () => {
       try {
-        const res = await fetch('http://localhost:3000/logs?limit=5');
+        const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://observix.onrender.com';
+        const res = await fetch(`${baseUrl}/logs?limit=5`);
         if (res.ok) {
           const data = await res.json();
           setLogs(data);

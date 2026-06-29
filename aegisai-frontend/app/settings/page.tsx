@@ -133,7 +133,8 @@ export default function SettingsPage() {
           </div>
           <button
             onClick={() => {
-              fetch('http://localhost:3005/keys/generate', { method: 'POST' })
+              const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://observix.onrender.com';
+              fetch(`${baseUrl}/keys/generate`, { method: 'POST' })
                 .then(res => res.json())
                 .then(data => alert(`Generated New Secret Key: ${data.key?.key}`))
                 .catch(console.error);

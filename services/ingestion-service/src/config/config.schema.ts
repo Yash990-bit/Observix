@@ -16,7 +16,7 @@ class EnvironmentVariables {
   @Max(65535)
   PORT: number = 3006;
 
-  @IsUrl({ protocols: ['nats'], require_tld: false }, { message: 'NATS_URL must be a valid nats connection URL (e.g. nats://localhost:4222)' })
+  @IsUrl({ protocols: ['nats', 'tls'], require_tld: false }, { message: 'NATS_URL must be a valid nats connection URL (e.g. nats://localhost:4222)' })
   NATS_URL!: string;
 }
 

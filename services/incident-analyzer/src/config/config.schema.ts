@@ -15,7 +15,7 @@ class EnvironmentVariables {
   @IsOptional()
   ANALYZER_PORT: number = 3008;
 
-  @IsUrl({ protocols: ['nats'], require_tld: false }, { message: 'NATS_URL must be a valid nats connection URL' })
+  @IsUrl({ protocols: ['nats', 'tls'], require_tld: false }, { message: 'NATS_URL must be a valid nats connection URL' })
   NATS_URL!: string;
 
   @IsString()

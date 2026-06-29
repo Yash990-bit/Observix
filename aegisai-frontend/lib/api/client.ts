@@ -1,6 +1,7 @@
-const API_GATEWAY_URL = 'http://localhost:3005';
-const INCIDENT_ANALYZER_URL = 'http://localhost:3008';
-const CLICKHOUSE_URL = 'http://localhost:8123';
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://observix.onrender.com';
+const API_GATEWAY_URL = BASE_URL;
+const INCIDENT_ANALYZER_URL = BASE_URL;
+const CLICKHOUSE_URL = BASE_URL;
 
 export interface LogItem {
   id: string;
