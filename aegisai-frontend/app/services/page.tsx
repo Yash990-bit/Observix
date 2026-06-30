@@ -167,7 +167,7 @@ export default function ServicesPage() {
 
           {/* Main Content (Interactive Graph) */}
           <main className="flex-1 relative bg-[#0a0a0c] overflow-hidden flex flex-col justify-center">
-            <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]" />
+            <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/white-diamond.png')]" />
             
             <div className="absolute top-4 left-6 z-10 bg-surface-container-low/80 backdrop-blur px-4 py-2 rounded-lg border border-white/10">
               <span className="text-xs font-mono text-on-surface-variant">Active Service: </span>
