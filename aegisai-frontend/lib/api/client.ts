@@ -109,19 +109,14 @@ export async function checkSystemHealth() {
     }
   };
 
-  const [apiGateway, ingestion, analyzer, clickhouse] = await Promise.all([
-    checkService(`${API_GATEWAY_URL}/health`),
-    checkService(`${API_GATEWAY_URL}/health`).catch(() => true), // default true fallback
-    checkService(`${INCIDENT_ANALYZER_URL}/incidents/analyze/raw`).catch(() => true),
-    checkService(`${CLICKHOUSE_URL}/ping`),
-  ]);
+  const isHealthy = await checkService(`${API_GATEWAY_URL}/health`);
 
   return {
-    apiGateway: true,
-    ingestion: true,
-    logProcessor: true,
-    incidentAnalyzer: true,
-    clickhouse: true,
-    nats: true,
+    apiGateway: isHealthy,
+    ingestion: isHealthy,
+    logProcessor: isHealthy,
+    incidentAnalyzer: isHealthy,
+    clickhouse: isHealthy,
+    nats: isHealthy,
   };
 }
