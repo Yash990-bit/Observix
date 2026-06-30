@@ -64,12 +64,12 @@ export default function SettingsPage() {
           {/* Scrollable Page Body */}
           <main className="flex-1 overflow-y-auto p-8 custom-scrollbar relative z-10 select-none">
             <div className="space-y-6 max-w-6xl mx-auto pb-16">
-              
+
               {/* Title Banner */}
               <div className="flex items-center justify-between flex-wrap gap-4 border-b border-white/10 pb-6">
                 <div>
                   <h1 className="font-headline-lg text-headline-lg font-bold text-slate-100 flex items-center gap-2.5">
-                    <span className="material-symbols-outlined text-cyan-400 text-3xl">settings</span>
+                    <span className="material-symbols-outlined text-primary text-3xl">settings</span>
                     <span>Platform Settings & Infrastructure</span>
                   </h1>
                   <p className="text-body-sm text-slate-400 mt-1">Configure security credentials and monitor microservice health parameters.</p>
@@ -92,7 +92,7 @@ export default function SettingsPage() {
                     <div key={svc.name} className="p-4 rounded-xl bg-slate-900/40 border border-white/5 space-y-3 hover:border-white/10 transition-colors">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2.5">
-                          <div className="w-8 h-8 rounded-lg bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 flex items-center justify-center">
+                          <div className="w-8 h-8 rounded-lg bg-primary/10 text-primary border border-primary/20 flex items-center justify-center">
                             <span className="material-symbols-outlined text-[20px]">{svc.icon}</span>
                           </div>
                           <span className="font-bold text-xs text-slate-200">{svc.name}</span>
@@ -119,7 +119,7 @@ export default function SettingsPage() {
                   <div className="space-y-2 text-xs">
                     <div className="p-3 rounded-xl bg-slate-900/40 border border-white/5 flex items-center justify-between">
                       <span className="text-slate-400">Tenant Namespace</span>
-                      <span className="font-mono font-bold text-cyan-400">org_default / proj_default</span>
+                      <span className="font-mono font-bold text-primary">org_default / proj_default</span>
                     </div>
                     <div className="p-3 rounded-xl bg-slate-900/40 border border-white/5 flex items-center justify-between">
                       <span className="text-slate-400">Global Rate Limit Scope</span>
@@ -141,7 +141,7 @@ export default function SettingsPage() {
                     </div>
                     <div className="p-3 rounded-xl bg-slate-900/40 border border-white/5 flex items-center justify-between">
                       <span className="text-slate-400">OLAP Analytical Batch Latency</span>
-                      <span className="font-mono font-bold text-cyan-400">48 ms</span>
+                      <span className="font-mono font-bold text-primary">48 ms</span>
                     </div>
                     <div className="p-3 rounded-xl bg-slate-900/40 border border-white/5 flex items-center justify-between">
                       <span className="text-slate-400">AI Triage Reasoner Latency</span>
@@ -152,7 +152,7 @@ export default function SettingsPage() {
               </div>
 
               {/* API Key Generator Container */}
-              <div className="glass-panel rounded-2xl p-6 border border-cyan-500/20 space-y-5 bg-gradient-to-r from-slate-950 to-indigo-950/20">
+              <div className="glass-panel rounded-2xl p-6 border border-primary/20 space-y-5 bg-gradient-to-r from-slate-950 to-indigo-950/20">
                 <div className="flex items-center justify-between flex-wrap gap-4 border-b border-white/5 pb-4">
                   <div>
                     <h3 className="font-bold text-base text-slate-100">Developer API Keys & Access</h3>
@@ -166,7 +166,7 @@ export default function SettingsPage() {
                         .then(data => alert(`Generated New Secret Key: ${data.key?.key}`))
                         .catch(console.error);
                     }}
-                    className="px-4 py-2.5 rounded-lg bg-gradient-to-r from-cyan-500 to-indigo-600 text-white font-bold text-xs shadow-lg shadow-cyan-500/20 hover:brightness-110 transition-all flex items-center gap-1.5"
+                    className="px-4 py-2.5 rounded-lg bg-gradient-to-r from-primary to-indigo-600 text-on-primary-container font-bold text-xs shadow-lg shadow-primary/20 hover:brightness-110 transition-all flex items-center gap-1.5"
                   >
                     <span className="material-symbols-outlined text-xs">add</span>
                     <span>Generate New API Key</span>
