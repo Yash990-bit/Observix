@@ -105,14 +105,14 @@ export class ProxyController {
 
   @Post('keys/generate')
   @HttpCode(HttpStatus.OK)
-  async generateApiKey(@Body() body: { name?: string }) {
+  async generateApiKey(@Body() body?: { name?: string }) {
     const randomHex = Math.random().toString(36).substring(2, 10) + Math.random().toString(36).substring(2, 6);
     const key = `aegis_sec_live_${randomHex}`;
     return {
       success: true,
       key: {
         id: `key_${Date.now()}`,
-        name: body.name || 'Developer API Key',
+        name: body?.name || 'Developer API Key',
         key,
         created_at: new Date().toISOString().split('T')[0],
         status: 'ACTIVE',

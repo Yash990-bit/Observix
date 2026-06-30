@@ -33,7 +33,11 @@ export default function SettingsPage() {
     setGenerating(true);
     try {
       const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://observix.onrender.com';
-      const res = await fetch(`${baseUrl}/keys/generate`, { method: 'POST' });
+      const res = await fetch(`${baseUrl}/keys/generate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: 'Developer API Key' }),
+      });
       if (res.ok) {
         const data = await res.json();
         const generatedVal = data.key?.key || data.key || 'aegis_sec_live_' + Math.random().toString(36).substring(2, 12);
