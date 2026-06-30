@@ -19,9 +19,20 @@ export default function SettingsPage() {
   ]);
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const [generating, setGenerating] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
-  const loadHealth = () => {
-    checkSystemHealth().then(setHealth).catch(console.error);
+  const loadHealth = async () => {
+    if (refreshing) return;
+    setRefreshing(true);
+    try {
+      const data = await checkSystemHealth();
+      setHealth(data);
+    } catch (err) {
+      console.error('Failed to load system health:', err);
+    } finally {
+      // Small timeout for premium visual spinner feel
+      setTimeout(() => setRefreshing(false), 800);
+    }
   };
 
   useEffect(() => {
@@ -130,10 +141,11 @@ export default function SettingsPage() {
 
                 <button
                   onClick={loadHealth}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-body-sm font-semibold text-slate-200 hover:text-white hover:bg-white/10 transition-colors"
+                  disabled={refreshing}
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-body-sm font-semibold text-slate-200 hover:text-white hover:bg-white/10 transition-colors disabled:opacity-50"
                 >
-                  <span className="material-symbols-outlined text-sm">sync</span>
-                  <span>Refresh Matrix</span>
+                  <span className={`material-symbols-outlined text-sm ${refreshing ? 'animate-spin' : ''}`}>sync</span>
+                  <span>{refreshing ? 'Refreshing...' : 'Refresh Matrix'}</span>
                 </button>
               </div>
 
@@ -150,22 +162,26 @@ export default function SettingsPage() {
                           </div>
                           <span className="font-bold text-xs text-slate-200">{svc.name}</span>
                         </div>
-                        <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                          ONLINE
+                        <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold border uppercase transition-colors duration-300 ${
+                          svc.status
+                            ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                            : 'bg-rose-500/10 text-rose-400 border-rose-500/20 animate-pulse'
+                        }`}>
+                          {svc.status ? 'ONLINE' : 'OFFLINE'}
                         </span>
                       </div>
 
                       <p className="text-[11px] text-slate-400 leading-normal">{svc.role}</p>
                       <div className="pt-2 border-t border-white/5 flex justify-between text-[10px] font-mono text-slate-500">
                         <span>Port :{svc.port}</span>
-                        <span>HTTP 200 OK</span>
+                        <span>HTTP {svc.status ? '200 OK' : '503 SERVICE UNAVAILABLE'}</span>
                       </div>
                     </div>
                   ))}
                 </div>
               </div>
 
-              {/* Multi-Tenancy & Performance metrics */}
+              {/* Multi-Tenant & Performance metrics */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="glass-panel rounded-2xl p-6 border border-white/10 space-y-4">
                   <h3 className="font-headline-md text-headline-md font-semibold text-on-surface mb-2">SaaS Access Control</h3>
