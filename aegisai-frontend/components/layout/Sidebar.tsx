@@ -10,6 +10,7 @@ const navItems = [
   { href: '/services', icon: 'hub', label: 'Service Graph' },
   { href: '/how-it-works', icon: 'help', label: 'How It Works' },
   { href: '/docs', icon: 'description', label: 'API Docs' },
+  { href: '/settings', icon: 'settings', label: 'Settings' },
 ];
 
 export default function Sidebar() {
