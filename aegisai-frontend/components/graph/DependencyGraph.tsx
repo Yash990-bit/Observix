@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Network, Server, Database, Activity, Cpu, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { Network, AlertCircle } from 'lucide-react';
 import { clsx } from 'clsx';
 
 interface ServiceNode {
@@ -23,6 +23,28 @@ const initialNodes: ServiceNode[] = [
   { id: 'log-processor', name: 'Log Processor', type: 'processor', port: 3007, status: 'healthy', latency: 22, dependencies: ['clickhouse'] },
   { id: 'incident-analyzer', name: 'AI Incident Engine', type: 'ai', port: 3008, status: 'healthy', latency: 120, dependencies: ['clickhouse'] },
   { id: 'clickhouse', name: 'ClickHouse OLAP', type: 'storage', port: 8123, status: 'healthy', latency: 14, dependencies: [] },
+];
+
+const coordinates: Record<string, { x: number; y: number }> = {
+  'api-gateway': { x: 30, y: 220 },
+  'ingestion-service': { x: 250, y: 90 },
+  'auth-service': { x: 250, y: 350 },
+  'nats': { x: 470, y: 90 },
+  'db-service': { x: 470, y: 350 },
+  'log-processor': { x: 690, y: 50 },
+  'incident-analyzer': { x: 690, y: 210 },
+  'clickhouse': { x: 690, y: 370 },
+};
+
+const connections = [
+  { from: 'api-gateway', to: 'ingestion-service' },
+  { from: 'api-gateway', to: 'auth-service' },
+  { from: 'ingestion-service', to: 'nats' },
+  { from: 'auth-service', to: 'db-service' },
+  { from: 'nats', to: 'log-processor' },
+  { from: 'nats', to: 'incident-analyzer' },
+  { from: 'log-processor', to: 'clickhouse' },
+  { from: 'incident-analyzer', to: 'clickhouse' },
 ];
 
 export function DependencyGraph() {
@@ -76,24 +98,80 @@ export function DependencyGraph() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Interactive Visual Canvas */}
-        <div className="lg:col-span-2 glass-panel rounded-2xl p-6 border border-border min-h-[480px] flex flex-col justify-between relative bg-gradient-to-br from-slate-950 via-slate-900/50 to-slate-950 overflow-hidden">
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#1f293715_1px,transparent_1px),linear-gradient(to_bottom,#1f293715_1px,transparent_1px)] bg-[size:3rem_3rem] pointer-events-none" />
+        <div className="lg:col-span-2 glass-panel rounded-2xl p-6 border border-border min-h-[520px] relative bg-gradient-to-br from-slate-950 via-slate-900/50 to-slate-950 overflow-x-auto overflow-y-hidden">
+          <div className="min-w-[900px] h-[480px] relative">
+            {/* Grid Pattern Background */}
+            <div className="absolute inset-0 bg-[linear-gradient(to_right,#1f293715_1px,transparent_1px),linear-gradient(to_bottom,#1f293715_1px,transparent_1px)] bg-[size:2rem_2rem] pointer-events-none" />
 
-          <div className="grid grid-cols-3 gap-8 relative z-10 my-auto">
-            {/* Column 1: Gateways & Entry */}
-            <div className="space-y-6 flex flex-col justify-center">
-              {nodes.filter(n => n.type === 'gateway').map(node => renderNodeCard(node))}
-            </div>
+            {/* SVG Connecting Paths */}
+            <svg className="absolute inset-0 w-full h-full pointer-events-none">
+              <defs>
+                <linearGradient id="grad-line" x1="0%" x2="100%" y1="0%" y2="0%">
+                  <stop offset="0%" stopColor="#22d3ee" stopOpacity="0.4" />
+                  <stop offset="100%" stopColor="#4f46e5" stopOpacity="0.4" />
+                </linearGradient>
+                <style>{`
+                  @keyframes flow {
+                    to { stroke-dashoffset: -20; }
+                  }
+                  .flow-path {
+                    stroke-dasharray: 6, 6;
+                    animation: flow 1.2s linear infinite;
+                  }
+                `}</style>
+              </defs>
+              {connections.map((conn, idx) => {
+                const fromCoord = coordinates[conn.from];
+                const toCoord = coordinates[conn.to];
+                const fromNode = nodes.find(n => n.id === conn.from);
+                const toNode = nodes.find(n => n.id === conn.to);
+                
+                const isFailing = fromNode?.status === 'failing' || toNode?.status === 'failing';
+                const isDegraded = fromNode?.status === 'degraded' || toNode?.status === 'degraded';
+                
+                const strokeColor = isFailing ? '#ef4444' : isDegraded ? '#f59e0b' : 'url(#grad-line)';
+                
+                // Adjust coords to draw from center-right of source to center-left of target
+                const startX = fromCoord.x + 160;
+                const startY = fromCoord.y + 36;
+                const endX = toCoord.x;
+                const endY = toCoord.y + 36;
+                
+                // Smooth bezier curve
+                const controlX = startX + (endX - startX) / 2;
+                const pathD = `M ${startX} ${startY} C ${controlX} ${startY}, ${controlX} ${endY}, ${endX} ${endY}`;
 
-            {/* Column 2: Core Services & Processors */}
-            <div className="space-y-6 flex flex-col justify-center">
-              {nodes.filter(n => n.type === 'service' || n.type === 'processor').map(node => renderNodeCard(node))}
-            </div>
+                return (
+                  <path
+                    key={idx}
+                    d={pathD}
+                    fill="none"
+                    stroke={strokeColor}
+                    strokeWidth={isFailing ? 2.5 : 1.5}
+                    className={clsx('transition-all duration-300', !isFailing && 'flow-path')}
+                  />
+                );
+              })}
+            </svg>
 
-            {/* Column 3: Storage & AI Brain */}
-            <div className="space-y-6 flex flex-col justify-center">
-              {nodes.filter(n => n.type === 'storage' || n.type === 'ai').map(node => renderNodeCard(node))}
-            </div>
+            {/* Interactive Node Cards */}
+            {nodes.map(node => {
+              const coord = coordinates[node.id];
+              return (
+                <div
+                  key={node.id}
+                  style={{
+                    position: 'absolute',
+                    left: `${coord.x}px`,
+                    top: `${coord.y}px`,
+                    width: '160px',
+                    zIndex: 10,
+                  }}
+                >
+                  {renderNodeCard(node)}
+                </div>
+              );
+            })}
           </div>
         </div>
 
@@ -161,21 +239,20 @@ export function DependencyGraph() {
 
     return (
       <div
-        key={node.id}
         onClick={() => setSelectedNode(node)}
         className={clsx(
-          'p-3.5 rounded-xl border transition-all cursor-pointer relative group',
+          'p-3 rounded-xl border transition-all cursor-pointer relative group select-none',
           isFailing ? 'bg-rose-950/40 border-rose-500/50 shadow-lg shadow-rose-500/20 animate-pulse' :
           isDegraded ? 'bg-amber-950/40 border-amber-500/50 shadow-md shadow-amber-500/10' :
           'bg-slate-900/80 border-border/80 hover:border-cyan-500/40 hover:bg-slate-800/80',
           isSelected && 'ring-2 ring-cyan-400 shadow-cyan-500/20'
         )}
       >
-        <div className="flex items-center justify-between mb-1.5">
-          <span className="text-xs font-bold text-slate-200 group-hover:text-cyan-300 transition-colors truncate">{node.name}</span>
-          <span className={clsx('h-2 w-2 rounded-full shrink-0', isFailing ? 'bg-rose-500' : isDegraded ? 'bg-amber-500' : 'bg-emerald-500')} />
+        <div className="flex items-center justify-between mb-1">
+          <span className="text-[11px] font-bold text-slate-200 group-hover:text-cyan-300 transition-colors truncate">{node.name}</span>
+          <span className={clsx('h-2 w-2 rounded-full shrink-0', isFailing ? 'bg-rose-500 animate-ping' : isDegraded ? 'bg-amber-500' : 'bg-emerald-500')} />
         </div>
-        <div className="flex items-center justify-between text-[10px] text-slate-400 font-mono">
+        <div className="flex items-center justify-between text-[9px] text-slate-400 font-mono">
           <span>:{node.port}</span>
           <span>{node.latency}ms</span>
         </div>
