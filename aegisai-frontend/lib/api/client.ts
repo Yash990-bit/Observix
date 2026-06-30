@@ -100,23 +100,29 @@ export async function explainLog(log: LogItem) {
 }
 
 export async function checkSystemHealth() {
-  const checkService = async (url: string) => {
-    try {
-      const res = await fetch(url, { cache: 'no-store' });
-      return res.ok;
-    } catch {
-      return false;
+  try {
+    const res = await fetch(`${API_GATEWAY_URL}/health`, { cache: 'no-store' });
+    if (res.ok) {
+      const data = await res.json();
+      return {
+        apiGateway: true,
+        ingestion: true,
+        logProcessor: true,
+        incidentAnalyzer: true,
+        clickhouse: data.services?.clickhouse ?? true,
+        nats: data.services?.nats ?? true,
+      };
     }
-  };
-
-  const isHealthy = await checkService(`${API_GATEWAY_URL}/health`);
+  } catch (err) {
+    console.error('System health check request failed:', err);
+  }
 
   return {
-    apiGateway: isHealthy,
-    ingestion: isHealthy,
-    logProcessor: isHealthy,
-    incidentAnalyzer: isHealthy,
-    clickhouse: isHealthy,
-    nats: isHealthy,
+    apiGateway: false,
+    ingestion: false,
+    logProcessor: false,
+    incidentAnalyzer: false,
+    clickhouse: false,
+    nats: false,
   };
 }
